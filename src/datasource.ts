@@ -99,25 +99,34 @@ export class SolrDatasource {
     }
 
     public annotationQuery(options) {
-        const query = this.templateSrv.replace(options.annotation.query, {}, "glob");
-        const annotationQuery = {
-            range: options.range,
-            annotation: {
-                datasource: options.annotation.datasource,
-                enable: options.annotation.enable,
-                iconColor: options.annotation.iconColor,
-                name: options.annotation.name,
-                query,
-            },
-            rangeRaw: options.rangeRaw,
+        const annotation = options.annotation;
+        const baseQuery = this.templateSrv.replace(annotation.query, {}, "glob") || "*:*";
+        const timeField = "timestamp_dt";
+        const collection = annotation.collection || "annotations";
+        const tagsField = annotation.tagsField || "tags";
+        const titleField = annotation.titleField || "desc";
+        const textField = annotation.textField || null;
+        const start = options.range.from.toISOString();
+        const end = options.range.to.toISOString();
+        const query = {
+            query: `${baseQuery} AND ${timeField}:[${start} TO ${end}]`,
+            limit: 0
         };
 
         return this.doRequest({
-            data: annotationQuery,
+            data: query,
             method: "POST",
-            url: this.url + "/annotations",
+            url: `${this.url}/${collection}/query`,
         }).then((result) => {
-            return result.data;
+            _.map(result.data.response.docs, (doc) => {
+                return {
+                    annotation: annotation,
+                    time: moment(doc[timeField]).valueOf(),
+                    title: doc[titleField],
+                    tags: doc[tagsField],
+                    text: doc[textField]
+                };
+            });
         });
     }
 /*
