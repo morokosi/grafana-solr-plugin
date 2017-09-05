@@ -110,15 +110,15 @@ export class SolrDatasource {
         const end = options.range.to.toISOString();
         const query = {
             query: `${baseQuery} AND ${timeField}:[${start} TO ${end}]`,
-            limit: 0
+            limit: 10
         };
 
         return this.doRequest({
             data: query,
             method: "POST",
-            url: `${this.url}/${collection}/query`,
+            url: `${this.url}/${collection}/query?defType=edismax`,
         }).then((result) => {
-            _.map(result.data.response.docs, (doc) => {
+            return _.map(result.data.response.docs, (doc) => {
                 return {
                     annotation: annotation,
                     time: moment(doc[timeField]).valueOf(),
