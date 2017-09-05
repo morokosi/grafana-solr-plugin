@@ -1,0 +1,24 @@
+<query-editor-row query-ctrl="ctrl" class="solr-datasource-query-row" has-text-edit-mode="true">
+    <div class="gf-form-inline">
+        <div class="gf-form">
+            <label class="gf-form-label query-keyword">Type</label>
+            <select class="gf-form-input" ng-model="ctrl.target.type" ng-options="f as f for f in ['facet']"></select>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label query-keyword">Collection</label>
+            <input type="text" class="gf-form-input input-medium" ng-model="ctrl.target.collection" bs-typeahead="ctrl.listCollection" placeholder="collection name" data-min-length="0" ng-blur="ctrl.targetBlur()"/>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label query-keyword">Query</label>
+            <input type="text" class="gf-form-input input-medium" ng-model="ctrl.target.query" placeholder="q=" data-min-length="0" ng-blur="ctrl.targetBlur()"/>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label query-keyword">Timestamp Field</label>
+            <input type="text" class="gf-form-input input-medium" ng-model="ctrl.target.timestampField" placeholder="*_dt" data-min-length="0" ng-blur="ctrl.targetBlur()"/>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label query-keyword">FacetFn</label>
+            <input type="text" class="gf-form-input input-medium" ng-model="ctrl.target.facet" placeholder="avg(*_td)" data-min-length="0" ng-blur="ctrl.targetBlur()"/>
+        </div>
+    </div>
+</query-editor-row>
